@@ -5,19 +5,19 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'quick_notifier.dart';
-import 'quick_reference.dart';
-import 'quick_status.dart';
-import 'quick_watcher.dart';
-import 'quick_worker.dart';
+import 'stage_notifier.dart';
+import 'stage_reference.dart';
+import 'stage_status.dart';
+import 'stage_watcher.dart';
+import 'stage_worker.dart';
 
-class Quick {
-  static final SplayTreeMap<String, dynamic> _quicks = SplayTreeMap();
-  static final SplayTreeMap<String, QuickWorker> _workers = SplayTreeMap();
+class Stage {
+  static final SplayTreeMap<String, dynamic> _stages = SplayTreeMap();
+  static final SplayTreeMap<String, StageWorker> _workers = SplayTreeMap();
   static final SplayTreeMap<String, dynamic> _binds = SplayTreeMap();
   static final List<String> _lockedKeys = [];
-  static dynamic defaultAbsentWorkerStatus = QuickStatus.absent;
-  static Map<Key, QuickNotifier> notifiers = {};
+  static dynamic defaultAbsentWorkerStatus = StageStatus.absent;
+  static Map<Key, StageNotifier> notifiers = {};
   static FlutterSecureStorage storage = const FlutterSecureStorage();
 
   static void notify(dynamic dependency) {
@@ -36,25 +36,25 @@ class Quick {
     _workers[key]?.status = status;
   }
 
-  static QuickReference set(String key, dynamic value) {
-    _quicks[key] = value;
+  static StageReference set(String key, dynamic value) {
+    _stages[key] = value;
     Type T = value.runtimeType;
-    return QuickReference(key, T);
+    return StageReference(key, T);
   }
 
-  static QuickReference make(String key, Function(dynamic) maker) {
-    dynamic value = maker(_quicks[key]);
-    _quicks[key] = value;
+  static StageReference make(String key, Function(dynamic) maker) {
+    dynamic value = maker(_stages[key]);
+    _stages[key] = value;
     Type T = value.runtimeType;
-    return QuickReference(key, T);
+    return StageReference(key, T);
   }
 
   static dynamic get(String key) {
-    return _quicks[key];
+    return _stages[key];
   }
 
   static T getAs<T extends Object>(String key) {
-    return _quicks[key] as T;
+    return _stages[key] as T;
   }
 
   static Future<void> store(String key, dynamic value) async {
@@ -73,21 +73,21 @@ class Quick {
   }
 
   static bool free(String key) {
-    return _quicks.remove(key);
+    return _stages.remove(key);
   }
 
-  static QuickReference ref(String key) {
+  static StageReference ref(String key) {
     Type T = get(key).runtimeType;
-    return QuickReference(key, T);
+    return StageReference(key, T);
   }
 
   static void clear() {
-    _quicks.clear();
+    _stages.clear();
   }
 
   static void clearWithout(List<String> keys) {
     keys.addAll(_lockedKeys);
-    _quicks.removeWhere((key, value) => !keys.contains(key));
+    _stages.removeWhere((key, value) => !keys.contains(key));
   }
 
   static void lock(String key) {
@@ -102,7 +102,7 @@ class Quick {
 
   static String on(
       String key, Function(dynamic params, Function(dynamic) setStatus) work) {
-    _workers[key] = QuickWorker(work, key);
+    _workers[key] = StageWorker(work, key);
 
     return key;
   }
@@ -141,7 +141,7 @@ class Quick {
     Widget Function() build, {
     List<dynamic> dependencies = const [Null],
   }) {
-    QuickWatcher watcher = QuickWatcher(
+    StageWatcher watcher = StageWatcher(
       bindDependencies: dependencies,
       builder: (context) => build(),
     );
@@ -153,7 +153,7 @@ class Quick {
     required Widget Function(BuildContext context) builder,
     List<dynamic> dependencies = const [Null],
   }) {
-    QuickWatcher watcher = QuickWatcher(
+    StageWatcher watcher = StageWatcher(
       bindDependencies: dependencies,
       builder: builder,
     );
@@ -166,7 +166,7 @@ class Quick {
     required Map<dynamic, Widget> cases,
     List<dynamic> dependencies = const [Null],
   }) {
-    QuickWatcher watcher = QuickWatcher(
+    StageWatcher watcher = StageWatcher(
       bindDependencies: dependencies,
       builder: (context) =>
           cases[status] ??
@@ -187,6 +187,6 @@ class Quick {
   // }
 
   // static void toNamed(String name) {
-  //   Navigator.pushNamed(Quick.get(context), name);
+  //   Navigator.pushNamed(Stage.get(context), name);
   // }
 }

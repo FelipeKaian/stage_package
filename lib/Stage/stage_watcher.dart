@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'quick.dart';
-import 'quick_notifier.dart';
+import 'stage.dart';
+import 'stage_notifier.dart';
 
-class QuickWatcher extends StatefulWidget {
-  QuickWatcher(
+class StageWatcher extends StatefulWidget {
+  StageWatcher(
       {super.key, required this.builder, required this.bindDependencies});
 
   List<dynamic> bindDependencies;
@@ -12,20 +12,20 @@ class QuickWatcher extends StatefulWidget {
   Key watcherKey = UniqueKey();
 
   @override
-  State<QuickWatcher> createState() => _QuickWatcherState();
+  State<StageWatcher> createState() => _StageWatcherState();
 }
 
-class _QuickWatcherState extends State<QuickWatcher> {
+class _StageWatcherState extends State<StageWatcher> {
   @override
   void initState() {
     for (dynamic bind in widget.bindDependencies) {
-      QuickNotifier? notifier = Quick.notifiers[ObjectKey(bind)];
+      StageNotifier? notifier = Stage.notifiers[ObjectKey(bind)];
       if (notifier != null) {
-        if (context.findAncestorWidgetOfExactType<QuickWatcher>() == null) {
+        if (context.findAncestorWidgetOfExactType<StageWatcher>() == null) {
           notifier.updates[widget.watcherKey] = () => setState(() {});
         }
       } else {
-        Quick.notifiers[ObjectKey(bind)] = QuickNotifier(
+        Stage.notifiers[ObjectKey(bind)] = StageNotifier(
             updates: {widget.watcherKey: () => setState(() {})},
             dependency: ObjectKey(bind));
       }
@@ -41,10 +41,10 @@ class _QuickWatcherState extends State<QuickWatcher> {
   @override
   void dispose() {
     for (dynamic bind in widget.bindDependencies) {
-      QuickNotifier? notifier = Quick.notifiers[ObjectKey(bind)];
+      StageNotifier? notifier = Stage.notifiers[ObjectKey(bind)];
       notifier!.updates.remove(widget.watcherKey);
       if (notifier.updates.isEmpty) {
-        Quick.notifiers.remove(ObjectKey(bind));
+        Stage.notifiers.remove(ObjectKey(bind));
       }
     }
 
