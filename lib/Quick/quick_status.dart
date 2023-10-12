@@ -1,4 +1,4 @@
-enum StageStatus {
+enum QuickStatus {
   absent,
   idle,
   working,

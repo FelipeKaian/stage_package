@@ -1,17 +1,17 @@
-import 'stage.dart';
-import 'stage_status.dart';
+import 'quick.dart';
+import 'quick_status.dart';
 
-class StageWorker {
-  dynamic status = StageStatus.idle;
+class QuickWorker {
+  dynamic status = QuickStatus.idle;
   Function(dynamic params, Function(dynamic) setStatus) work;
   dynamic key;
-  StageWorker(
+  QuickWorker(
     this.work,
     this.key, {
     this.status,
   });
 
-  StageWorker call({dynamic params}) {
+  QuickWorker call({dynamic params}) {
     work(((newStatus) {
       status = newStatus;
     }), params);
@@ -19,6 +19,6 @@ class StageWorker {
   }
 
   kill() {
-    Stage.off(key);
+    Quick.off(key);
   }
 }

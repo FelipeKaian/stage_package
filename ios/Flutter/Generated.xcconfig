@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
 FLUTTER_ROOT=C:\Users\Felipe A\Downloads\flutter_windows_3.3.8-stable\flutter
-FLUTTER_APPLICATION_PATH=C:\Users\Felipe A\Music\stage_package\stage_package
+FLUTTER_APPLICATION_PATH=C:\Users\Felipe A\Music\quick_package\quick_package
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_TARGET=lib\main.dart
 FLUTTER_BUILD_DIR=build
