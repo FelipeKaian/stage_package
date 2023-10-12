@@ -1,7 +1,7 @@
 name: stage
 description: A dynamic State Manager.
 version: 0.0.1
-homepage: Stage
+homepage: https://github.com/FelipeKaian/stage_package
 
 environment:
   sdk: '>=3.0.6 <4.0.0'
