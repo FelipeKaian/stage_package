@@ -36,7 +36,10 @@ class Stage {
     _workers[key]?.status = status;
   }
 
-  static StageReference set(String key, dynamic value) {
+  static StageReference set(dynamic key, dynamic value) {
+    if (key.runtimeType == Enum) {
+      key = enumToString(key);
+    }
     _stages[key] = value;
     Type T = value.runtimeType;
     return StageReference(key, T);
@@ -49,7 +52,10 @@ class Stage {
     return StageReference(key, T);
   }
 
-  static dynamic get(String key) {
+  static dynamic get(dynamic key) {
+    if (key.runtimeType == Enum) {
+      key = enumToString(key);
+    }
     return _stages[key];
   }
 
@@ -66,13 +72,14 @@ class Stage {
     if (storeValue == null) {
       return null;
     } else {
-      T data = jsonDecode(storeValue) as T;
+      T? data = jsonDecode(storeValue) as T?;
       set(key, data);
       return data;
     }
   }
 
-  static bool free(String key) {
+  static Future<bool> free(String key) async {
+    await storage.delete(key: key);
     return _stages.remove(key);
   }
 
@@ -176,6 +183,10 @@ class Stage {
     );
 
     return watcher;
+  }
+
+  static String enumToString<T>(T enumValue) {
+    return enumValue.toString().split('.').last;
   }
 
   // static void to(Widget widget) {
